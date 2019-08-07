@@ -1,8 +1,30 @@
 "use strict";
 var window = require("global/window")
-var isFunction = require("is-function")
-var parseHeaders = require("parse-headers")
-var xtend = require("xtend")
+var _extends = require("@babel/runtime/helpers/extends");
+
+var parseHeaders = function(headers) {
+    var result = {};
+
+    if (!headers) {
+        return result;
+    }
+
+    headers.trim().split('\n').forEach(function(row) {
+        var index = row.indexOf(':');
+        var key = row.slice(0, index).trim().toLowerCase();
+        var value = row.slice(index + 1).trim();
+
+        if (typeof(result[key]) === 'undefined') {
+          result[key] = value
+        } else if (Array.isArray(result[key])) {
+          result[key].push(value)
+        } else {
+          result[key] = [ result[key], value ]
+        }
+    });
+
+    return result;
+};
 
 module.exports = createXHR
 // Allow use of default import syntax in TypeScript
@@ -34,13 +56,13 @@ function isEmpty(obj){
 function initParams(uri, options, callback) {
     var params = uri
 
-    if (isFunction(options)) {
+    if (typeof options === 'function') {
         callback = options
         if (typeof uri === "string") {
             params = {uri:uri}
         }
     } else {
-        params = xtend(options, {uri: uri})
+        params = _extends({}, options, {uri: uri})
     }
 
     params.callback = callback
