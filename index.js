@@ -1,6 +1,15 @@
 "use strict";
 var window = require("global/window")
 var _extends = require("@babel/runtime/helpers/extends");
+var isFunction = require('is-function');
+
+/**
+ * @license
+ * slighly modified parse-headers 2.0.2 <https://github.com/kesla/parse-headers/>
+ * Copyright (c) 2014 David Björklund
+ * Available under the MIT license
+ * <https://github.com/kesla/parse-headers/blob/master/LICENCE>
+ */
 
 var parseHeaders = function(headers) {
     var result = {};
@@ -56,7 +65,7 @@ function isEmpty(obj){
 function initParams(uri, options, callback) {
     var params = uri
 
-    if (typeof options === 'function') {
+    if (isFunction(options)) {
         callback = options
         if (typeof uri === "string") {
             params = {uri:uri}
