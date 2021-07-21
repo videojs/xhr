@@ -10,9 +10,9 @@
     "browserify"
   ],
   "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/naugtur/xhr.git",
+  "repository": "git://github.com/videojs/xhr.git",
   "main": "index",
-  "homepage": "https://github.com/naugtur/xhr",
+  "homepage": "https://github.com/videojs/xhr",
   "contributors": [
     {
       "name": "Jake Verbaten"
@@ -22,10 +22,7 @@
       "email": "naugtur@gmail.com"
     }
   ],
-  "bugs": {
-    "url": "https://github.com/naugtur/xhr/issues",
-    "email": "naugtur@gmail.com"
-  },
+  "bugs": "https://github.com/videojs/xhr/issues",
   "typings": "./index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.5.5",
