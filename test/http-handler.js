@@ -2,7 +2,7 @@ var window = require("global/window")
 var test = require("tape")
 var forEach = require("for-each")
 
-var httpHandler = require("../http-handler.js")
+var httpHandler = require("../lib/http-handler.js")
 
 function toArrayBuffer(item) {
   const buffer = new ArrayBuffer(item.length);
