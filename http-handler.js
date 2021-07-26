@@ -1,6 +1,6 @@
 var window = require('global/window');
 
-const httpResponseHandler = (callback, decodeText = false) => (err, response, responseBody) => {
+const httpResponseHandler = (callback, decodeResponseBody = false) => (err, response, responseBody) => {
   // if the XHR failed, return that error
   if (err) {
     callback(err);
@@ -11,7 +11,7 @@ const httpResponseHandler = (callback, decodeText = false) => (err, response, re
   if (response.statusCode >= 400 && response.statusCode <= 599) {
     let cause = responseBody;
 
-    if (decodeText) {
+    if (decodeResponseBody) {
       if (window.TextDecoder) {
         const charset = getCharset(response.headers && response.headers['content-type']);
 

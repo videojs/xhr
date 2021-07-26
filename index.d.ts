@@ -5,7 +5,7 @@ export type BodyCallback = (
 
 export type HttpResponseHandler = (
   callback: BodyCallback,
-  decodeText: boolean
+  decodeResponseBody: boolean
 ) => XhrCallback;
 
 export type XhrCallback = (
