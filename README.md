@@ -1,8 +1,6 @@
 # xhr
 
-[![Join the chat at https://gitter.im/naugtur-xhr/Lobby](https://badges.gitter.im/naugtur-xhr/Lobby.svg)](https://gitter.im/naugtur-xhr/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-
+> Originally forked from [naugtur/xhr](https://github.com/naugtur/xhr).
 
 A small XMLHttpRequest wrapper. Designed for use with [browserify](http://browserify.org/), [webpack](https://webpack.github.io/) etc.
 
@@ -75,6 +73,8 @@ xhr := (XhrOptions, Callback<Response>) => Request
 the returned object is either an [`XMLHttpRequest`][3] instance
     or an [`XDomainRequest`][4] instance (if on IE8/IE9 &&
     `options.useXDR` is set to `true`)
+
+### XhrCallback
 
 Your callback will be called once with the arguments
     ( [`Error`][5], `response` , `body` ) where the response is an object:
@@ -201,6 +201,52 @@ A function being called right before the `send` method of the `XMLHttpRequest` o
 ### `options.xhr`
 
 Pass an `XMLHttpRequest` object (or something that acts like one) to use instead of constructing a new one using the `XMLHttpRequest` or `XDomainRequest` constructors. Useful for testing.
+
+## Helpers
+
+This module exposes the following helpers on the `xhr` object.
+
+### `xhr.httpHandler(callback, decodeResponseBody) => XhrCallback`
+
+`httpHandler` is a wrapper for the [XhrCallback][] which returns an error for HTTP Status Codes 4xx and 5xx. Given a callback, it'll either return an error with the response body as the error's cause, or return the response body.
+
+Usage like so:
+```js
+xhr({
+    uri: "https://example.com/foo",
+    responseType: 'arraybuffer'
+}, xhr.httpHandler(function(err, responseBody) {
+
+  // we got an error if the XHR errored out or if the status code was 4xx/5xx
+  if (err) {
+    // error cause is coming soon to JavaScript https://github.com/tc39/proposal-error-cause
+    throw new Error(err, {cause: err.cause});
+  }
+
+  // this will log an ArrayBuffer
+  console.log(responseBody);
+});
+```
+
+```js
+xhr({
+    uri: "https://example.com/foo",
+    responseType: 'arraybuffer'
+}, xhr.httpHandler(function(err, responseBody) {
+
+  if (err) {
+    throw new Error(err, {cause: err.cause});
+  }
+
+  // in this case, responseBody will be a String
+  console.log(responseBody);
+},
+
+// passing true as the second argument will cause httpHandler try and decode the response body into a string
+true)
+```
+
+
 
 ## FAQ
 
