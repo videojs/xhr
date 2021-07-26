@@ -376,3 +376,8 @@ test("XHR can be overridden", { timeout: 500 }, function(assert) {
     assert.equal(xdrs, 1, "created the custom XDR")
     assert.end()
 })
+
+test('httpHandler is available on XHR', function(assert) {
+  assert.ok(xhr.httpHandler)
+  assert.end();
+});

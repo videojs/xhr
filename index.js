@@ -3,6 +3,8 @@ var window = require("global/window")
 var _extends = require("@babel/runtime/helpers/extends");
 var isFunction = require('is-function');
 
+createXHR.httpHandler = require('./http-handler.js');
+
 /**
  * @license
  * slighly modified parse-headers 2.0.2 <https://github.com/kesla/parse-headers/>

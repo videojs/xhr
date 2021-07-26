@@ -38,7 +38,9 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
+    "test:index": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
+    "test:http-handler": "run-browser test/http-handler.js -b -m test/mock-server.js | tap-spec",
+    "test": "npm run test:index && npm run test:http-handler",
     "browser": "run-browser -m test/mock-server.js test/index.js"
   }
 }

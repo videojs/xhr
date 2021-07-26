@@ -1,3 +1,13 @@
+export type BodyCallback = (
+  error: Error,
+  body: any
+) => void;
+
+export type HttpResponseHandler = (
+  callback: BodyCallback,
+  decodeResponseBody: boolean
+) => XhrCallback;
+
 export type XhrCallback = (
   error: Error,
   response: XhrResponse,
