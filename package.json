@@ -30,6 +30,9 @@
     "global": "~4.4.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
     "for-each": "^0.3.2",
     "pre-commit": "1.2.2",
     "run-browser": "naugtur/run-browser",
