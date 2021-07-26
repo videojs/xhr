@@ -43,6 +43,7 @@
   "license": "MIT",
   "scripts": {
     "prepublishOnly": "npm run build",
+    "start": "npm run build -- -w",
     "build": "babel-config-cjs src -d lib",
     "test:index": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
     "test:http-handler": "run-browser test/http-handler.js -b -m test/mock-server.js | tap-spec",
