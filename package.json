@@ -11,7 +11,7 @@
   ],
   "author": "Raynos <raynos2@gmail.com>",
   "repository": "git://github.com/videojs/xhr.git",
-  "main": "index",
+  "main": "./lib/index.js",
   "homepage": "https://github.com/videojs/xhr",
   "contributors": [
     {
@@ -23,13 +23,17 @@
     }
   ],
   "bugs": "https://github.com/videojs/xhr/issues",
-  "typings": "./index.d.ts",
+  "typings": "./lib/index.d.ts",
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "is-function": "^1.0.1",
     "global": "~4.4.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "@videojs/babel-config": "^0.1.0",
     "for-each": "^0.3.2",
     "pre-commit": "1.2.2",
     "run-browser": "naugtur/run-browser",
@@ -38,8 +42,12 @@
   },
   "license": "MIT",
   "scripts": {
+    "prepublishOnly": "npm run build",
+    "start": "npm run build -- -w",
+    "build": "babel-config-cjs src -d lib",
     "test:index": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
     "test:http-handler": "run-browser test/http-handler.js -b -m test/mock-server.js | tap-spec",
+    "pretest": "npm run build",
     "test": "npm run test:index && npm run test:http-handler",
     "browser": "run-browser -m test/mock-server.js test/index.js"
   }
