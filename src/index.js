@@ -274,6 +274,10 @@ function _createXHR(options) {
         }
     }
 
+    if (options.timeout && Number.isFinite(options.timeout)) {
+        xhr.timeout = options.timeout;
+    }
+
     xhr.onreadystatechange = readystatechange
     xhr.onload = loadFunc
     xhr.onerror = errorFunc
