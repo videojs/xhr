@@ -3,10 +3,12 @@ var window = require("global/window")
 var _extends = require("@babel/runtime/helpers/extends");
 var isFunction = require('is-function');
 var InterceptorsStorage = require('./interceptors.js');
+var RetryManager = require("./retry.js");
 
 createXHR.httpHandler = require('./http-handler.js');
 createXHR.requestInterceptorsStorage = new InterceptorsStorage();
 createXHR.responseInterceptorsStorage = new InterceptorsStorage();
+createXHR.retryManager = new RetryManager();
 
 /**
  * @license
@@ -80,6 +82,7 @@ function initParams(uri, options, callback) {
     }
 
     params.callback = callback
+    params.retry = createXHR.retryManager.createRetry();
     return params
 }
 
@@ -97,6 +100,8 @@ function _createXHR(options) {
     if (options.requestType) {
         options = createXHR.requestInterceptorsStorage.extend(options.requestType, options);
     }
+
+    var retryTimeout = options.retryTimeout;
     var called = false
     var callback = function cbOnce(err, response, body){
         if(!called){
@@ -132,15 +137,30 @@ function _createXHR(options) {
 
     function errorFunc(evt) {
         clearTimeout(timeoutTimer)
+        clearTimeout(retryTimeout)
         if(!(evt instanceof Error)){
             evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
         }
         evt.statusCode = 0
 
         var response = failureResponse
+
+        // we would like to retry on error:
+        if (options.retry && options.retry.shouldRetry) {
+            options.retryTimeout = setTimeout(function() {
+                options.retry.moveToNextAttempt();
+                // we want to re-use the same options and the same xhr object:
+                options.xhr = xhr;
+                _createXHR(options);
+            }, options.retry.getCurrentFuzzedDelay());
+
+            return;
+        }
+
         // call all registered response interceptors for a given request type:
         if (options.requestType) {
             response = createXHR.responseInterceptorsStorage.execute(options.requestType, response);
+        }
 
         return callback(evt, response)
     }
@@ -150,6 +170,7 @@ function _createXHR(options) {
         if (aborted) return
         var status
         clearTimeout(timeoutTimer)
+        clearTimeout(retryTimeout)
         if(options.useXDR && xhr.status===undefined) {
             //IE8 CORS GET successful response doesn't have a status field, but body is fine
             status = 200
@@ -229,6 +250,7 @@ function _createXHR(options) {
     }
     xhr.onabort = function(){
         aborted = true;
+        clearTimeout(retryTimeout)
     }
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync, options.username, options.password)
