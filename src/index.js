@@ -2,8 +2,11 @@
 var window = require("global/window")
 var _extends = require("@babel/runtime/helpers/extends");
 var isFunction = require('is-function');
+var InterceptorsStorage = require('./interceptors.js');
 
 createXHR.httpHandler = require('./http-handler.js');
+createXHR.requestInterceptorsStorage = new InterceptorsStorage();
+createXHR.responseInterceptorsStorage = new InterceptorsStorage();
 
 /**
  * @license
@@ -90,6 +93,10 @@ function _createXHR(options) {
         throw new Error("callback argument missing")
     }
 
+    // call all registered request interceptors for a given request type:
+    if (options.requestType) {
+        options = createXHR.requestInterceptorsStorage.extend(options.requestType, options);
+    }
     var called = false
     var callback = function cbOnce(err, response, body){
         if(!called){
@@ -129,7 +136,13 @@ function _createXHR(options) {
             evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
         }
         evt.statusCode = 0
-        return callback(evt, failureResponse)
+
+        var response = failureResponse
+        // call all registered response interceptors for a given request type:
+        if (options.requestType) {
+            response = createXHR.responseInterceptorsStorage.execute(options.requestType, response);
+
+        return callback(evt, response)
     }
 
     // will load the data & process the response in a special response object
@@ -161,6 +174,12 @@ function _createXHR(options) {
         } else {
             err = new Error("Internal XMLHttpRequest Error")
         }
+
+        // call all registered response interceptors for a given request type:
+        if (options.requestType) {
+            response = createXHR.responseInterceptorsStorage.execute(options.requestType, response);
+        }
+
         return callback(err, response, response.body)
     }
 
