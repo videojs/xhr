@@ -60,7 +60,7 @@ class RetryManager {
   }
 
   createRetry({ maxAttempts, delayFactor, fuzzFactor, initialDelay } = {}) {
-    return new RetryManager({
+    return new Retry({
       maxAttempts: maxAttempts || this.maxAttempts_,
       delayFactor: delayFactor || this.delayFactor_,
       fuzzFactor: fuzzFactor || this.fuzzFactor_,
