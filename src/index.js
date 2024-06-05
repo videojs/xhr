@@ -82,7 +82,11 @@ function initParams(uri, options, callback) {
     }
 
     params.callback = callback
-    params.retry = createXHR.retryManager.createRetry();
+
+    if (createXHR.retryManager.getIsEnabled()) {
+        params.retry = createXHR.retryManager.createRetry();
+    }
+
     return params
 }
 
@@ -97,8 +101,20 @@ function _createXHR(options) {
     }
 
     // call all registered request interceptors for a given request type:
-    if (options.requestType) {
-        options = createXHR.requestInterceptorsStorage.extend(options.requestType, options);
+    if (options.requestType && createXHR.requestInterceptorsStorage.getIsEnabled()) {
+        const requestInterceptorPayload = {
+            uri: options.uri || options.url,
+            headers: options.headers || {},
+            body: options.body,
+            metadata: options.metadata || {},
+        }
+
+        const updatedPayload = createXHR.requestInterceptorsStorage.execute(options.requestType, requestInterceptorPayload);
+
+        options.uri = updatedPayload.uri;
+        options.headers = updatedPayload.headers;
+        options.body = updatedPayload.body;
+        options.metadata = updatedPayload.metadata;
     }
 
     var retryTimeout = options.retryTimeout;
@@ -143,10 +159,8 @@ function _createXHR(options) {
         }
         evt.statusCode = 0
 
-        var response = failureResponse
-
         // we would like to retry on error:
-        if (options.retry && options.retry.shouldRetry) {
+        if (!aborted && createXHR.retryManager.getIsEnabled() && options.retry && options.retry.shouldRetry) {
             options.retryTimeout = setTimeout(function() {
                 options.retry.moveToNextAttempt();
                 // we want to re-use the same options and the same xhr object:
@@ -158,11 +172,21 @@ function _createXHR(options) {
         }
 
         // call all registered response interceptors for a given request type:
-        if (options.requestType) {
-            response = createXHR.responseInterceptorsStorage.execute(options.requestType, response);
+        if (options.requestType && createXHR.responseInterceptorsStorage.getIsEnabled()) {
+            const responseInterceptorPayload = {
+                headers: failureResponse.headers || {},
+                body: failureResponse.body,
+                responseUrl: xhr.responseUrl,
+                responseType: xhr.responseType,
+            }
+
+            const updatedPayload = createXHR.responseInterceptorsStorage.execute(options.requestType, responseInterceptorPayload);
+
+            failureResponse.body = updatedPayload.body;
+            failureResponse.headers = updatedPayload.headers;
         }
 
-        return callback(evt, response)
+        return callback(evt, failureResponse)
     }
 
     // will load the data & process the response in a special response object
@@ -197,8 +221,18 @@ function _createXHR(options) {
         }
 
         // call all registered response interceptors for a given request type:
-        if (options.requestType) {
-            response = createXHR.responseInterceptorsStorage.execute(options.requestType, response);
+        if (options.requestType && createXHR.responseInterceptorsStorage.getIsEnabled()) {
+            const responseInterceptorPayload = {
+                headers: response.headers || {},
+                body: response.body,
+                responseUrl: xhr.responseUrl,
+                responseType: xhr.responseType,
+            }
+
+            const updatedPayload = createXHR.responseInterceptorsStorage.execute(options.requestType, responseInterceptorPayload);
+
+            response.body = updatedPayload.body;
+            response.headers = updatedPayload.headers;
         }
 
         return callback(err, response, response.body)

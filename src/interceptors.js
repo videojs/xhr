@@ -1,6 +1,24 @@
 class InterceptorsStorage {
   constructor() {
     this.typeToInterceptorsMap_ = new Map();
+    this.enabled_ = false;
+  }
+
+  getIsEnabled() {
+    return this.enabled_;
+  }
+
+  enable() {
+    this.enabled_ = true;
+  }
+
+  disable() {
+    this.enabled_ = false;
+  }
+
+  reset() {
+    this.typeToInterceptorsMap_ = new Map();
+    this.enabled_ = false;
   }
 
   addInterceptor(type, interceptor) {

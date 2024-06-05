@@ -4,6 +4,27 @@ class RetryManager {
     this.delayFactor_ = 0.1;
     this.fuzzFactor_ = 0.1;
     this.initialDelay_ = 1000;
+    this.enabled_ = false;
+  }
+
+  getIsEnabled() {
+    return this.enabled_;
+  }
+
+  enable() {
+    this.enabled_ = true;
+  }
+
+  disable() {
+    this.enabled_ = false;
+  }
+
+  reset() {
+    this.maxAttempts_ = 1;
+    this.delayFactor_ = 0.1;
+    this.fuzzFactor_ = 0.1;
+    this.initialDelay_ = 1000;
+    this.enabled_ = false;
   }
 
   getMaxAttempts() {
