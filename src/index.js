@@ -82,11 +82,6 @@ function initParams(uri, options, callback) {
     }
 
     params.callback = callback
-
-    if (createXHR.retryManager.getIsEnabled()) {
-        params.retry = createXHR.retryManager.createRetry();
-    }
-
     return params
 }
 
@@ -107,6 +102,8 @@ function _createXHR(options) {
             headers: options.headers || {},
             body: options.body,
             metadata: options.metadata || {},
+            retry: options.retry,
+            timeout: options.timeout,
         }
 
         const updatedPayload = createXHR.requestInterceptorsStorage.execute(options.requestType, requestInterceptorPayload);
@@ -115,6 +112,8 @@ function _createXHR(options) {
         options.headers = updatedPayload.headers;
         options.body = updatedPayload.body;
         options.metadata = updatedPayload.metadata;
+        options.retry = updatedPayload.retry;
+        options.timeout = updatedPayload.timeout;
     }
 
     var called = false

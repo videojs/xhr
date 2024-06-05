@@ -59,12 +59,12 @@ class RetryManager {
     this.initialDelay_ = initialDelay;
   }
 
-  createRetry() {
+  createRetry({ maxAttempts, delayFactor, fuzzFactor, initialDelay } = {}) {
     return new RetryManager({
-      maxAttempts: this.maxAttempts_,
-      delayFactor: this.delayFactor_,
-      fuzzFactor: this.fuzzFactor_,
-      initialDelay: this.initialDelay_,
+      maxAttempts: maxAttempts || this.maxAttempts_,
+      delayFactor: delayFactor || this.delayFactor_,
+      fuzzFactor: fuzzFactor || this.fuzzFactor_,
+      initialDelay: initialDelay || this.initialDelay_,
     });
   }
 }
