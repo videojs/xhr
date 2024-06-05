@@ -39,6 +39,9 @@ export interface XhrBaseConfig {
   password?: string;
   withCredentials?: boolean;
   responseType?: '' | 'arraybuffer' | 'blob' | 'document' | 'json' | 'text';
+  requestType?: string;
+  metadata?: Record<string, unknown>;
+  retry?: Retry;
   beforeSend?: (xhrObject: XMLHttpRequest) => void;
   xhr?: XMLHttpRequest;
 }
@@ -57,6 +60,52 @@ export interface XhrInstance {
   (url: string, options: XhrBaseConfig, callback: XhrCallback): any;
 }
 
+export interface Retry {
+  getCurrentFuzzedDelay(): number;
+  shouldRetry(): boolean;
+  moveToNextAttempt(): void;
+}
+
+export interface NetworkRequest {
+  headers: Record<string, string>;
+  uri: string;
+  metadata: Record<string, unknown>;
+  body?: unknown;
+  retry?: Retry;
+  timeout?: number;
+}
+
+export interface NetworkResponse {
+  headers: Record<string, string>;
+  responseUrl: string;
+  body?: unknown;
+  responseType?: XMLHttpRequestResponseType;
+}
+
+export type Interceptor<T> = (payload: T) => T;
+
+export interface InterceptorsStorage<T> {
+  enable(): void;
+  reset(): void;
+  addInterceptor(type: string, interceptor: Interceptor<T>): boolean;
+  removeInterceptor(type: string, interceptor: Interceptor<T>): boolean;
+  clearInterceptorsByType(type: string): boolean;
+  clear(): boolean;
+}
+
+export interface RetryOptions {
+  maxAttempts?: number;
+  delayFactor?: number;
+  fuzzFactor?: number;
+  initialDelay?: number;
+}
+
+export interface RetryManager {
+  enable(): void;
+  reset(): void;
+  createRetry(options?: RetryOptions): Retry;
+}
+
 export interface XhrStatic extends XhrInstance {
   del: XhrInstance;
   get: XhrInstance;
@@ -64,6 +113,9 @@ export interface XhrStatic extends XhrInstance {
   patch: XhrInstance;
   post: XhrInstance;
   put: XhrInstance;
+  requestInterceptorsStorage: InterceptorsStorage<NetworkRequest>;
+  responseInterceptorsStorage: InterceptorsStorage<NetworkResponse>;
+  retryManager: RetryManager;
 }
 
 declare const Xhr: XhrStatic;
