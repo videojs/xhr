@@ -159,7 +159,7 @@ function _createXHR(options) {
         evt.statusCode = 0
 
         // we would like to retry on error:
-        if (!aborted && createXHR.retryManager.getIsEnabled() && options.retry && options.retry.shouldRetry) {
+        if (!aborted && createXHR.retryManager.getIsEnabled() && options.retry && options.retry.shouldRetry()) {
             options.retryTimeout = setTimeout(function() {
                 options.retry.moveToNextAttempt();
                 // we want to re-use the same options and the same xhr object:
