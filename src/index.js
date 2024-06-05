@@ -174,7 +174,7 @@ function _createXHR(options) {
             const responseInterceptorPayload = {
                 headers: failureResponse.headers || {},
                 body: failureResponse.body,
-                responseUrl: xhr.responseUrl,
+                responseUrl: xhr.responseURL,
                 responseType: xhr.responseType,
             }
 
@@ -223,7 +223,7 @@ function _createXHR(options) {
             const responseInterceptorPayload = {
                 headers: response.headers || {},
                 body: response.body,
-                responseUrl: xhr.responseUrl,
+                responseUrl: xhr.responseURL,
                 responseType: xhr.responseType,
             }
 
