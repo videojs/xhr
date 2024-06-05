@@ -117,7 +117,6 @@ function _createXHR(options) {
         options.metadata = updatedPayload.metadata;
     }
 
-    var retryTimeout = options.retryTimeout;
     var called = false
     var callback = function cbOnce(err, response, body){
         if(!called){
@@ -153,7 +152,7 @@ function _createXHR(options) {
 
     function errorFunc(evt) {
         clearTimeout(timeoutTimer)
-        clearTimeout(retryTimeout)
+        clearTimeout(options.retryTimeout)
         if(!(evt instanceof Error)){
             evt = new Error("" + (evt || "Unknown XMLHttpRequest Error") )
         }
@@ -194,7 +193,7 @@ function _createXHR(options) {
         if (aborted) return
         var status
         clearTimeout(timeoutTimer)
-        clearTimeout(retryTimeout)
+        clearTimeout(options.retryTimeout)
         if(options.useXDR && xhr.status===undefined) {
             //IE8 CORS GET successful response doesn't have a status field, but body is fine
             status = 200
@@ -284,7 +283,7 @@ function _createXHR(options) {
     }
     xhr.onabort = function(){
         aborted = true;
-        clearTimeout(retryTimeout)
+        clearTimeout(options.retryTimeout)
     }
     xhr.ontimeout = errorFunc
     xhr.open(method, uri, !sync, options.username, options.password)
