@@ -61,6 +61,9 @@ export interface XhrInstance {
 }
 
 export interface Retry {
+  getCurrentDelay(): number;
+  getCurrentMinPossibleDelay(): number;
+  getCurrentMaxPossibleDelay(): number;
   getCurrentFuzzedDelay(): number;
   shouldRetry(): boolean;
   moveToNextAttempt(): void;
@@ -86,11 +89,15 @@ export type Interceptor<T> = (payload: T) => T;
 
 export interface InterceptorsStorage<T> {
   enable(): void;
+  disable(): void;
+  getIsEnabled(): boolean;
   reset(): void;
   addInterceptor(type: string, interceptor: Interceptor<T>): boolean;
   removeInterceptor(type: string, interceptor: Interceptor<T>): boolean;
   clearInterceptorsByType(type: string): boolean;
   clear(): boolean;
+  getForType(type: string): Set<Interceptor<T>>;
+  execute(type: string, payload: T): T;
 }
 
 export interface RetryOptions {
@@ -102,7 +109,16 @@ export interface RetryOptions {
 
 export interface RetryManager {
   enable(): void;
+  disable(): void;
   reset(): void;
+  getMaxAttempts(): number;
+  setMaxAttempts(maxAttempts: number): void;
+  getDelayFactor(): number;
+  setDelayFactor(delayFactor: number): void;
+  getFuzzFactor(): number;
+  setFuzzFactor(fuzzFactor: number): void;
+  getInitialDelay(): number;
+  setInitialDelay(initialDelay: number): void;
   createRetry(options?: RetryOptions): Retry;
 }
 
