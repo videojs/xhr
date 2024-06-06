@@ -41,7 +41,7 @@ class InterceptorsStorage {
   removeInterceptor(type, interceptor) {
     const interceptorsSet = this.typeToInterceptorsMap_.get(type);
 
-    if (interceptorsSet?.has(interceptor)) {
+    if (interceptorsSet && interceptorsSet.has(interceptor)) {
       interceptorsSet.delete(interceptor);
       return true;
     }

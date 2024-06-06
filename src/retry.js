@@ -106,7 +106,6 @@ class Retry {
    * This means ±10% deviation
    * So if we have delay as 1000
    * This function can generate any value from 900 to 1100
-   * @private
    */
   getCurrentFuzzedDelay() {
     const lowValue = this.getCurrentMinPossibleDelay();
