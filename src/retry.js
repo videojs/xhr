@@ -93,6 +93,14 @@ class Retry {
     return this.currentDelay_;
   }
 
+  getCurrentMinPossibleDelay() {
+    return (1 - this.fuzzFactor_) * this.currentDelay_;
+  }
+
+  getCurrentMaxPossibleDelay() {
+    return (1 + this.fuzzFactor_) * this.currentDelay_;
+  }
+
   /**
    * For example fuzzFactor is 0.1
    * This means ±10% deviation
@@ -101,8 +109,8 @@ class Retry {
    * @private
    */
   getCurrentFuzzedDelay() {
-    const lowValue = (1 - this.fuzzFactor_) * this.currentDelay_;
-    const highValue = (1 + this.fuzzFactor_) * this.currentDelay_;
+    const lowValue = this.getCurrentMinPossibleDelay();
+    const highValue = this.getCurrentMaxPossibleDelay();
 
     return lowValue + Math.random() * (highValue - lowValue);
   }
