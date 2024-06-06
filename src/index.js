@@ -125,7 +125,9 @@ function _createXHR(options) {
     }
 
     function readystatechange() {
-        if (xhr.readyState === 4) {
+        // do not call load 2 times when response interceptors are enabled
+        // why do we even need this 2nd load?
+        if (xhr.readyState === 4 && !createXHR.responseInterceptorsStorage.getIsEnabled()) {
             setTimeout(loadFunc, 0)
         }
     }
