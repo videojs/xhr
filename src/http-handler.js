@@ -1,4 +1,4 @@
-var window = require('global/window');
+var window = require('@videojs/global-compat/window');
 
 const httpResponseHandler = (callback, decodeResponseBody = false) => (err, response, responseBody) => {
   // if the XHR failed, return that error

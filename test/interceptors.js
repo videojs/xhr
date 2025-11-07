@@ -1,4 +1,4 @@
-var window = require("global/window")
+var window = require("@videojs/global-compat/window")
 var test = require("tape")
 
 var InterceptorsStorage = require('../lib/interceptors');

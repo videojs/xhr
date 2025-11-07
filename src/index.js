@@ -1,5 +1,5 @@
 "use strict";
-var window = require("global/window")
+var window = require("@videojs/global-compat/window")
 var _extends = require("@babel/runtime/helpers/extends");
 var isFunction = require('is-function');
 var InterceptorsStorage = require('./interceptors.js');
