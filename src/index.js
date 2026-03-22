@@ -1,7 +1,6 @@
 "use strict";
 var window = require("global/window")
 var _extends = require("@babel/runtime/helpers/extends");
-var isFunction = require('is-function');
 var InterceptorsStorage = require('./interceptors.js');
 var RetryManager = require("./retry.js");
 
@@ -72,7 +71,7 @@ function isEmpty(obj){
 function initParams(uri, options, callback) {
     var params = uri
 
-    if (isFunction(options)) {
+    if (typeof options === "function") {
         callback = options
         if (typeof uri === "string") {
             params = {uri:uri}
