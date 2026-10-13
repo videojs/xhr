@@ -24,6 +24,9 @@
   ],
   "bugs": "https://github.com/videojs/xhr/issues",
   "typings": "./lib/index.d.ts",
+  "engines": {
+    "node": "^22.13.0 || >=24"
+  },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "is-function": "^1.0.1",
