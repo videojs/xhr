@@ -28,7 +28,8 @@
     "node": "^22.13.0 || >=24"
   },
   "overrides": {
-    "crypto-browserify": "^3.12.1"
+    "crypto-browserify": "^3.12.1",
+    "chokidar": "^4.0.3"
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
