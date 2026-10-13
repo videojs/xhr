@@ -27,6 +27,9 @@
   "engines": {
     "node": "^22.13.0 || >=24"
   },
+  "overrides": {
+    "crypto-browserify": "^3.12.1"
+  },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "global": "~4.4.0",
