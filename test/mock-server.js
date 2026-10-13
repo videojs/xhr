@@ -6,6 +6,10 @@ module.exports = function(req, res) {
     } else if (req.url.substr(0,16) === '/mock/no-content') {
         res.statusCode = parseInt(req.url.substring(17), 10)
         res.end('')
+    } else if (req.url === '/mock/cors-404') {
+        res.statusCode = 404
+        res.setHeader('Access-Control-Allow-Origin', '*')
+        res.end('')
     } else if (req.url === '/mock/echo') {
         res.statusCode = 200
         req.pipe(res)
