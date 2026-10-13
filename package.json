@@ -10,7 +10,10 @@
     "browserify"
   ],
   "author": "Raynos <raynos2@gmail.com>",
-  "repository": "git://github.com/videojs/xhr.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/videojs/xhr.git"
+  },
   "main": "./lib/index.js",
   "homepage": "https://github.com/videojs/xhr",
   "contributors": [
