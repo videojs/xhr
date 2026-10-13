@@ -29,18 +29,18 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
-    "is-function": "^1.0.1",
-    "global": "~4.4.0"
+    "global": "~4.4.0",
+    "is-function": "^1.0.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.14.8",
     "@babel/preset-env": "^7.14.8",
     "@videojs/babel-config": "^0.1.0",
+    "browserify": "^17.0.1",
     "for-each": "^0.3.2",
+    "playwright-core": "^1.64.0",
     "pre-commit": "1.2.2",
-    "run-browser": "naugtur/run-browser",
-    "tap-spec": "^5.0.0",
     "tape": "^4.0.0"
   },
   "license": "MIT",
@@ -48,12 +48,12 @@
     "prepublishOnly": "npm run build",
     "start": "npm run build -- -w",
     "build": "babel-config-cjs src -d lib",
-    "test:index": "run-browser test/index.js -b -m test/mock-server.js | tap-spec",
-    "test:interceptors": "run-browser test/interceptors.js -b -m test/mock-server.js | tap-spec",
-    "test:retry": "run-browser test/retry.js -b -m test/mock-server.js | tap-spec",
-    "test:http-handler": "run-browser test/http-handler.js -b -m test/mock-server.js | tap-spec",
+    "test:index": "node test/runner.js test/index.js",
+    "test:interceptors": "node test/runner.js test/interceptors.js",
+    "test:retry": "node test/runner.js test/retry.js",
+    "test:http-handler": "node test/runner.js test/http-handler.js",
     "pretest": "npm run build",
     "test": "npm run test:index && npm run test:http-handler && npm run test:interceptors && npm run test:retry",
-    "browser": "run-browser -m test/mock-server.js test/index.js"
+    "browser": "node test/runner.js test/index.js --serve"
   }
 }
